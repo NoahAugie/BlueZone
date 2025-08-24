@@ -14,7 +14,7 @@ fun ParkListScreen() {
     Scaffold(
         topBar = {
             // This is the bar that shows at the very top with the title
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text("Skateparks") }
             )
         }
