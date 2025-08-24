@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // I wrap the whole app in my theme so the styling is consistent
+            // I wrap the whole app in my theme so the styling stays consistent
             BlueZoneTheme {
                 AppNavigation()
             }
@@ -34,8 +34,8 @@ class MainActivity : ComponentActivity() {
 }
 
 /**
- * I keep my navigation graph in one place.
- * Start at the launch screen, then go to the list, then into a detail page per park.
+ * My navigation graph: launch -> list -> detail.
+ * I encode park names in the route so spaces don’t break anything.
  */
 @Composable
 fun AppNavigation() {
@@ -43,9 +43,9 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "launch" // I want the app to open on the logo screen
+        startDestination = "launch"
     ) {
-        // Logo + Enter button
+        // Logo + Enter
         composable("launch") {
             LaunchScreen(
                 onEnterClick = { navController.navigate("parkList") }
@@ -54,43 +54,41 @@ fun AppNavigation() {
 
         // Scrollable list of parks
         composable("parkList") {
-            // NOTE: in the next step I’ll update ParkListScreen to accept onParkClick(name)
-            // and navigate to detail. I’m wiring the route here so it’s ready.
             ParkListScreen(
-                onParkClick = { parkName ->
-                    // Park names have spaces, so I encode them before putting in the route
-                    navController.navigate("detail/${Uri.encode(parkName)}")
+                onParkClick = { park ->
+                    navController.navigate("detail/${Uri.encode(park.name)}")
                 }
             )
         }
 
-        // Detail page for a single park
+        // Detail screen for a single park (found by name)
         composable(
             route = "detail/{parkName}",
             arguments = listOf(navArgument("parkName") { type = NavType.StringType })
         ) { backStackEntry ->
             val encoded = backStackEntry.arguments?.getString("parkName")
-            val parkName = encoded?.let { Uri.decode(it) }
+            val parkName = encoded?.let(Uri::decode)
             val park = SkateparkData.parks.find { it.name == parkName }
 
             if (park != null) {
                 ParkDetailScreen(
                     park = park,
-                    onBackClick = { navController.popBackStack() } // back arrow takes me to the list
+                    onBackClick = { navController.popBackStack() } // Back returns to the list
                 )
             } else {
-                // Simple fallback in case the name didn't match for some reason
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                        Text("Park not found")
-                    }
+                // Lightweight fallback if a name can’t be matched
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Park not found")
                 }
             }
         }
     }
 }
 
-// I keep LaunchScreen here so it’s easy to tweak the intro without hunting for files
+// I keep this here so I can tweak the intro quickly
 @Composable
 fun LaunchScreen(onEnterClick: () -> Unit) {
     Column(
@@ -111,16 +109,14 @@ fun LaunchScreen(onEnterClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Title + Enter button
+        // Title + Enter
         Column(
             modifier = Modifier.offset(y = (-220).dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "BlueZone", fontSize = 32.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = onEnterClick) {
-                Text("Enter")
-            }
+            Button(onClick = onEnterClick) { Text("Enter") }
         }
     }
 }
