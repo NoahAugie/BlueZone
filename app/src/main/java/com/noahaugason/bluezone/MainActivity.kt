@@ -1,5 +1,6 @@
 package com.noahaugason.bluezone
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,35 +14,75 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.noahaugason.bluezone.ui.theme.BlueZoneTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // I wrapped everything in my app's theme so the style is consistent
+            // I wrap the whole app in my theme so the styling is consistent
             BlueZoneTheme {
-                // I set up a navigation controller to move between screens
-                val navController = rememberNavController()
-                NavHost(
-                    navController = navController,
-                    startDestination = "launch" // I want the app to open on the launch screen
-                ) {
-                    // This is my first screen with the logo and Enter button
-                    composable("launch") {
-                        LaunchScreen(
-                            onEnterClick = {
-                                // When I click the Enter button, I go to the park list screen
-                                navController.navigate("parkList")
-                            }
-                        )
-                    }
-                    // This shows the skatepark list after hitting Enter
-                    composable("parkList") {
-                        ParkListScreen()
+                AppNavigation()
+            }
+        }
+    }
+}
+
+/**
+ * I keep my navigation graph in one place.
+ * Start at the launch screen, then go to the list, then into a detail page per park.
+ */
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = "launch" // I want the app to open on the logo screen
+    ) {
+        // Logo + Enter button
+        composable("launch") {
+            LaunchScreen(
+                onEnterClick = { navController.navigate("parkList") }
+            )
+        }
+
+        // Scrollable list of parks
+        composable("parkList") {
+            // NOTE: in the next step I’ll update ParkListScreen to accept onParkClick(name)
+            // and navigate to detail. I’m wiring the route here so it’s ready.
+            ParkListScreen(
+                onParkClick = { parkName ->
+                    // Park names have spaces, so I encode them before putting in the route
+                    navController.navigate("detail/${Uri.encode(parkName)}")
+                }
+            )
+        }
+
+        // Detail page for a single park
+        composable(
+            route = "detail/{parkName}",
+            arguments = listOf(navArgument("parkName") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val encoded = backStackEntry.arguments?.getString("parkName")
+            val parkName = encoded?.let { Uri.decode(it) }
+            val park = SkateparkData.parks.find { it.name == parkName }
+
+            if (park != null) {
+                ParkDetailScreen(
+                    park = park,
+                    onBackClick = { navController.popBackStack() } // back arrow takes me to the list
+                )
+            } else {
+                // Simple fallback in case the name didn't match for some reason
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                        Text("Park not found")
                     }
                 }
             }
@@ -49,7 +90,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// I put the LaunchScreen outside of the class so it’s a reusable composable function
+// I keep LaunchScreen here so it’s easy to tweak the intro without hunting for files
 @Composable
 fun LaunchScreen(onEnterClick: () -> Unit) {
     Column(
@@ -59,7 +100,7 @@ fun LaunchScreen(onEnterClick: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // I added my logo here so it’s front and center
+        // Logo front and center
         Image(
             painter = painterResource(id = R.drawable.bz_logo),
             contentDescription = "BlueZone Logo",
@@ -70,20 +111,15 @@ fun LaunchScreen(onEnterClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // I stacked the text and button under the logo
+        // Title + Enter button
         Column(
             modifier = Modifier.offset(y = (-220).dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "BlueZone",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Text(text = "BlueZone", fontSize = 32.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
-            // This is the Enter button that takes me to the next screen
             Button(onClick = onEnterClick) {
-                Text(text = "Enter")
+                Text("Enter")
             }
         }
     }

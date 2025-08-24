@@ -15,7 +15,8 @@ object SkateparkData {
             safety = listOf("Helmets and pads required per posted rules", "Open sunrise–sunset"),
             photos = listOf("https://www.westcoastskateparks.com/skateparks/brentwood-skatepark-brentwood-california"),
             mapsUrl = "https://maps.google.com/?q=195+Griffith+Ln,+Brentwood,+CA+94513",
-            reviewLinks = listOf("https://goskate.com/sp/listing/brentwood-ca-skatepark/")
+            reviewLinks = listOf("https://goskate.com/sp/listing/brentwood-ca-skatepark/"),
+            familyScore = 78
         ),
         // I really like that this one has a mix of flow and street
         Skatepark(
@@ -32,7 +33,8 @@ object SkateparkData {
             reviewLinks = listOf(
                 "https://goskate.com/sp/listing/livermore-skatepark/",
                 "https://www.mapquest.com/us/california/sunken-gardens-skate-park-267696616"
-            )
+            ),
+            familyScore = 82
         ),
         // Pleasanton’s is more of a hockey/inline setup, so I noted size as 0 since it’s not a true skatepark
         Skatepark(
@@ -49,7 +51,8 @@ object SkateparkData {
             reviewLinks = listOf(
                 "https://goskate.com/sp/listing/pleasanton-skatepark/",
                 "https://www.yelp.com/biz/val-vista-community-park-pleasanton"
-            )
+            ),
+            familyScore = 55
         ),
         // Fremont is huge, definitely one of the biggest in the Bay
         Skatepark(
@@ -66,7 +69,8 @@ object SkateparkData {
                 "https://www.yelp.com/biz/fremont-skate-park-fremont"
             ),
             mapsUrl = "https://maps.google.com/?q=Central+Park+Skatepark,+Fremont,+CA+94538",
-            reviewLinks = listOf("https://www.yelp.com/biz/fremont-skate-park-fremont")
+            reviewLinks = listOf("https://www.yelp.com/biz/fremont-skate-park-fremont"),
+            familyScore = 74
         ),
         Skatepark(
             name = "Tim Brauch Memorial Skatepark (Scotts Valley Skypark)",
@@ -85,7 +89,8 @@ object SkateparkData {
             reviewLinks = listOf(
                 "https://goskate.com/sp/listing/tim-brauch-memorial-skatepark-scotts-valley-skate-park/",
                 "https://www.mapquest.com/us/california/scotts-valley-tim-brauch-memorial-skate-park-372205204"
-            )
+            ),
+            familyScore = 76
         ),
         // Santa Cruz has that full pipe, which is pretty unique compared to most parks
         Skatepark(
@@ -99,7 +104,8 @@ object SkateparkData {
             safety = listOf("Typical city hours around 9 a.m. to sunset (per listings)", "Observe posted rules"),
             photos = listOf("https://www.yelp.com/biz/ken-wormhoudt-skate-park-santa-cruz"),
             mapsUrl = "https://maps.google.com/?q=225+San+Lorenzo+Blvd,+Santa+Cruz,+CA+95060",
-            reviewLinks = listOf("https://www.mapquest.com/us/california/ken-wormhoudt-skate-park-345986985")
+            reviewLinks = listOf("https://www.mapquest.com/us/california/ken-wormhoudt-skate-park-345986985"),
+            familyScore = 70
         ),
         Skatepark(
             name = "Town Park Skateboarding (DeFremery Park)",
@@ -112,7 +118,8 @@ object SkateparkData {
             safety = listOf("City park hours; urban setting—use standard awareness and go during active hours/events for visibility"),
             photos = listOf("https://www.yelp.com/biz/defremery-park-oakland"),
             mapsUrl = "https://maps.google.com/?q=1651+Adeline+St,+Oakland,+CA+94607",
-            reviewLinks = listOf("https://www.visitoakland.com/listing/defremery-park/8342/")
+            reviewLinks = listOf("https://www.visitoakland.com/listing/defremery-park/8342/"),
+            familyScore = 60
         ),
         Skatepark(
             name = "Youth UpRising Skate Plaza",
@@ -123,9 +130,10 @@ object SkateparkData {
             features = listOf("stairs", "hubbas", "rails", "manual pads", "banks"),
             cleanlinessNotes = "On Youth UpRising campus; access aligned with campus operations.",
             safety = listOf("Campus facility; check hours and access; family/youth services setting"),
-            photos = listOf("https://www.westcoastskateparks.com/skateparks/youth-uprising-skate-plaza-oakland-california"),
+            photos = listOf("https://www.westcoastskateparks.com/skateparks/youth-uprising-skate-pla za-oakland-california".replace(" ", "")),
             mapsUrl = "https://maps.google.com/?q=8711+MacArthur+Blvd,+Oakland,+CA+94605",
-            reviewLinks = listOf("https://goskate.com/sp/listing/youth-uprising-skate-plaza/")
+            reviewLinks = listOf("https://goskate.com/sp/listing/youth-uprising-skate-plaza/"),
+            familyScore = 62
         ),
         // I set size to 0 here because it’s not consistent across listings and more of a rec center spot
         Skatepark(
@@ -139,7 +147,8 @@ object SkateparkData {
             safety = listOf("Well-lit complex; standard rec center hours; urban location awareness recommended"),
             photos = listOf("https://www.yelp.com/biz/rainbow-recreation-center-oakland"),
             mapsUrl = "https://maps.google.com/?q=5800+International+Blvd,+Oakland,+CA+94621",
-            reviewLinks = listOf("https://www.yelp.com/biz/rainbow-recreation-center-oakland-2")
+            reviewLinks = listOf("https://www.yelp.com/biz/rainbow-recreation-center-oakland-2"),
+            familyScore = 65
         ),
         Skatepark(
             name = "Berkeley Skate Park (Terrence McCrary Jr. Memorial Skatepark)",
@@ -158,7 +167,8 @@ object SkateparkData {
             reviewLinks = listOf(
                 "https://www.yelp.com/biz/berkeley-skatepark-berkeley",
                 "https://www.berkeleyparentsnetwork.org/recommend/org/berkeley-skate-park"
-            )
+            ),
+            familyScore = 72
         )
     )
 }
